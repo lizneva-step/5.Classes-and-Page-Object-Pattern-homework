@@ -1,0 +1,24 @@
+{
+  "name": "pw4",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "testUI": "npx playwright test --ui",
+    "report": "npx playwright show-report",
+    "allureFile": "npx allure awesome ./allure-results"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "@types/node": "^24.3.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.0.0",
+    "allure": "^3.0.0-beta.18",
+    "allure-playwright": "^3.4.1"
+  }
+}
