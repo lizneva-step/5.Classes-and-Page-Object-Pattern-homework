@@ -1,3 +1,4 @@
+import { test, expect } from "@playwright/test";
 export class SettingsPage {
   constructor(page) {
     // техническое описание страницы
@@ -13,10 +14,9 @@ export class SettingsPage {
     });
     this.yourNameInput = page.locator('input[name="username"]');
     this.emailInput = page.locator('input[name="email"]');
-  }
-  // Динамический локатор заголовка settingsHeader имеет  в тексте сгенерированное имя
-  settingsHeader(name) {
-    return this.page.locator(`h4:has-text("${name}")`);
+    this.settingsHeader = page.locator(
+      'h1.text-xs-center:has-text("Your Settings")'
+    );
   }
 
   // бизнесовые действия со страницой

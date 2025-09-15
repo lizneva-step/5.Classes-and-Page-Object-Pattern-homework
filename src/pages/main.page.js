@@ -12,7 +12,9 @@ export class MainPage {
     this.userDropdown = page.locator(
       ".nav-link.dropdown-toggle.cursor-pointer"
     );
-    this.userDropdownProfile = page.getByRole("link", { name: "Profile" });
+    this.userDropdownProfile = page.locator(
+      'a.dropdown-item[href*="/profile/"]'
+    );
 
     this.tabYourFeed = page.getByRole("button", { name: "Your Feed" });
     this.tabYourFeedText = page.locator(

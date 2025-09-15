@@ -1,7 +1,7 @@
 // тест2. Пользователь может обновить имя и почту в профиле
 // 0. Зарегистрироваться
-// 1. Открыть профиль
-// 2. Отрыть настройки профиля
+// 1. Нажать на профиль (имя пользователя)
+// 2. Нажать на пункт Профиль в имени пользователя
 // 3. Нажать редактировать настройки профиля
 // 4. Проверить заголовок
 // 5. Очистить имя
@@ -41,17 +41,17 @@ test.describe("Обновление профиля", () => {
     await mainPage.gotoRegister();
     await registerPage.register(user);
 
-    // 1. Открыть профиль
+    // 1. Нажать на профиль (имя пользователя),
     await mainPage.clickUserDropdown();
-    await mainPage.clickUserDropdownProfile();
 
-    // 2. Открыть настройки профиля
-    await mainPage.clickUserDropdownSettings();
+    // 2. Нажать на пункт Профиль в имени пользователя
+    await mainPage.clickUserDropdownProfile();
 
     // 3. Нажать редактировать настройки профиля
     await settingsPage.clickEditProfileSettingsButton();
+
     // 4. Проверить заголовок
-    await expect(settingsPage.settingsHeader(user.name)).toBeVisible();
+    await expect(settingsPage.settingsHeader).toBeVisible();
 
     // 5. Очистить имя
     await settingsPage.yourNameInput.clear();
@@ -74,7 +74,7 @@ test.describe("Обновление профиля", () => {
     await expect(settingsPage.updateSettingsButton).not.toBeVisible();
 
     // 11. Проверить что имя профиля новое (рядом с тогглом)
-    await expect(mainPage.userDropdownProfile).toHaveText(newName);
+    await expect(mainPage.userDropdown).toHaveText(newName);
 
     // 12. Проверить что в инпуте предзаполнено новое имя
     await expect(settingsPage.yourNameInput).toHaveValue(newName);
