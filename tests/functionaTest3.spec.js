@@ -1,32 +1,58 @@
-import { test, expect } from '@playwright/test';
-import { faker } from '@faker-js/faker';
-import { MainPage, RegisterPage } from '../src/pages/index';
+// Тест3 (Сделать PO  Эдитор)
+// 0. Зарегистрироваться
+// 1. Нажать Новая заметка
+// 2. Ввести имя, описание, текст, тег
+// 3. Нажать публиковать
+// 4. Проверить  имя, текст, тег
 
-const URL = 'https://realworld.qa.guru/';
+import { test, expect } from "@playwright/test";
+import { faker } from "@faker-js/faker";
+import { MainPage, RegisterPage, EditorPage } from "../src/pages/index";
 
-test.describe('Регистрация', () => {
-	test.beforeEach(async ({ page }) => {
-		await page.goto(URL);
-	});
+const URL = "https://realworld.qa.guru/";
 
-	test.only('Пользователь не может зарегистрироваться повторно', async ({
-		page,
-	}) => {
-		const user = {
-			name: faker.person.fullName(),
-			email: faker.internet.email(),
-			password: faker.internet.password(),
-		};
+test.describe("Создание статьи", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(URL);
+  });
 
-		const mainPage = new MainPage(page);
-		const registerPage = new RegisterPage(page);
+  test.only("Пользователь может создать новую статью", async ({ page }) => {
+    const user = {
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    };
 
-		await mainPage.gotoRegister();
-		await registerPage.register(user);
+    const articleData = {
+      title: faker.lorem.sentence(3),
+      about: faker.lorem.sentence(5),
+      body: faker.lorem.paragraphs(3),
+      tags: faker.lorem.word(),
+    };
 
-		// todo переделать ассерт
-		await expect(registerPage.emailErrorText).toContainText(
-			'Email already exists.. try logging in',
-		);
-	});
+    /// 0. Зарегистрироваться
+    const mainPage = new MainPage(page);
+    const registerPage = new RegisterPage(page);
+    const editorPage = new EditorPage(page);
+
+    await mainPage.gotoRegister();
+    await registerPage.register(user);
+
+    // 1. Нажать новая заметка
+    await mainPage.clickNewArticleButton();
+
+    // 2. Ввести имя, описание, текст, тег
+    await editorPage.fillArticleTitle(articleData.title);
+    await editorPage.fillArticleAbout(articleData.about);
+    await editorPage.fillArticleText(articleData.body);
+    await editorPage.fillArticleTags(articleData.tags);
+
+    // 3. Нажать публиковать
+    await editorPage.clickPublishArticleButton();
+
+    // 4. Проверить имя, описание, текст, тег
+    await expect(editorPage.articleTitle).toBeVisible();
+    await expect(editorPage.articleText).toBeVisible();
+    await expect(editorPage.tags).toBeVisible();
+  });
 });
