@@ -1,32 +1,85 @@
-import { test, expect } from '@playwright/test';
-import { faker } from '@faker-js/faker';
-import { MainPage, RegisterPage } from '../src/pages/index';
+// тест2. Пользователь может обновить имя и почту в профиле
+// 0. Зарегистрироваться
+// 1. Открыть профиль
+// 2. Отрыть настройки профиля
+// 3. Нажать редактировать настройки профиля
+// 4. Проверить заголовок
+// 5. Очистить имя
+// 6. Ввести имя
+// 7. Очистить почту
+// 8. Ввести почту
+// 9. Нажать обновить настройки
+// 10. Проверить что апдейт сеттингс не отображается
+// 11. Проверить что имя профиля новое  (рядом с тогглом)
+// 12. Проверить что в инпуте предзаполнено новое имя
+// 13. Проверить что в инпуте предзаполнена новая почта
 
-const URL = 'https://realworld.qa.guru/';
+import { test, expect } from "@playwright/test";
+import { faker } from "@faker-js/faker";
+import { MainPage, RegisterPage, SettingsPage } from "../src/pages/index";
+const URL = "https://realworld.qa.guru/";
 
-test.describe('Регистрация', () => {
-	test.beforeEach(async ({ page }) => {
-		await page.goto(URL);
-	});
+test.describe("Обновление профиля", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(URL);
+  });
 
-	test.only('Пользователь не может зарегистрироваться повторно', async ({
-		page,
-	}) => {
-		const user = {
-			name: faker.person.fullName(),
-			email: faker.internet.email(),
-			password: faker.internet.password(),
-		};
+  test.only("Пользователь может обновить имя и почту в профиле", async ({
+    page,
+  }) => {
+    const user = {
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    };
 
-		const mainPage = new MainPage(page);
-		const registerPage = new RegisterPage(page);
+    // 0. Зарегистрироваться
+    const mainPage = new MainPage(page);
+    const registerPage = new RegisterPage(page);
+    const settingsPage = new SettingsPage(page);
 
-		await mainPage.gotoRegister();
-		await registerPage.register(user);
+    await mainPage.gotoRegister();
+    await registerPage.register(user);
 
-		// todo переделать ассерт
-		await expect(registerPage.emailErrorText).toContainText(
-			'Email already exists.. try logging in',
-		);
-	});
+    // 1. Открыть профиль
+    await mainPage.clickUserDropdown();
+    await mainPage.clickUserDropdownProfile();
+
+    // 2. Открыть настройки профиля
+    await mainPage.clickUserDropdownSettings();
+
+    // 3. Нажать редактировать настройки профиля
+    await settingsPage.clickEditProfileSettingsButton();
+    // 4. Проверить заголовок
+    await expect(settingsPage.settingsHeader(user.name)).toBeVisible();
+
+    // 5. Очистить имя
+    await settingsPage.yourNameInput.clear();
+
+    // 6. Ввести имя
+    const newName = faker.person.fullName();
+    await settingsPage.yourNameInput.fill(newName);
+
+    // 7. Очистить почту
+    await settingsPage.emailInput.clear();
+
+    // 8. Ввести почту
+    const newEmail = faker.internet.email();
+    await settingsPage.emailInput.fill(newEmail);
+
+    // 9. Нажать обновить настройки
+    await settingsPage.updateSettingsButton.click();
+
+    // 10. Проверить что апдейт сеттингс не отображается (страница обновилась без ошибок)
+    await expect(settingsPage.updateSettingsButton).not.toBeVisible();
+
+    // 11. Проверить что имя профиля новое (рядом с тогглом)
+    await expect(mainPage.userDropdownProfile).toHaveText(newName);
+
+    // 12. Проверить что в инпуте предзаполнено новое имя
+    await expect(settingsPage.yourNameInput).toHaveValue(newName);
+
+    // 13. Проверить что в инпуте предзаполнена новая почта
+    await expect(settingsPage.emailInput).toHaveValue(newEmail);
+  });
 });
