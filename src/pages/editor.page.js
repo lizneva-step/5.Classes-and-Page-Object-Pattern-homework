@@ -25,7 +25,6 @@ export class EditorPage {
     );
   }
 
-  
   // бизнесовые действия со страницой
   async fillArticleTitle(title) {
     return test.step("Заполнение заголовка статьи", async (step) => {

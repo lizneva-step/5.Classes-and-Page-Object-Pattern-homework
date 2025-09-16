@@ -21,10 +21,15 @@ export class MainPage {
       "div.article-preview >> text=Articles not available."
     );
     this.tabGlobalFeed = page.getByRole("button", { name: "Global Feed" });
+    // this.tabGlobalFeed = page.locator(
+    //   'button.nav-link:has-text("Global Feed")'
+    // );
     this.tabGlobalFeedText = page.locator('a.author[href*="/profile/"]');
 
     this.newArticleButton = page.getByRole("link", { name: "New Article" });
-    this.homeButton = page.getByRole("link", { name: "Home" });
+    //this.homeButton = page.getByRole("link", { name: "Home" });
+    this.homeButton = page.getByRole("link", { name: "Home" }).nth(0);
+    this.articleTitle = page.locator("div.article-preview h1");
   }
   //методы
   //бизнесовые действия со страницей
@@ -56,9 +61,34 @@ export class MainPage {
 
   async clickGlobalFeedButton() {
     return test.step("Переход в табу Global Feed", async (step) => {
+      await this.tabGlobalFeed.waitFor({ state: "visible" });
       await this.tabGlobalFeed.click();
     });
   }
+
+  async clickHomeButton() {
+    return test.step("Переход на домашнюю страницу", async (step) => {
+      await this.homeButton.click();
+    });
+  }
+
+  // async clickGlobalFeedButton() {
+  //   return test.step("Переход в табу Global Feed", async (step) => {
+  //     // Используем более универсальный селектор
+  //     const globalFeedButton = this.page.locator(
+  //       'button.nav-link:has-text("Global Feed"), a.nav-link:has-text("Global Feed")'
+  //     );
+
+  //     // Если кнопка не найдена, ждем немного и пробуем снова
+  //     try {
+  //       await globalFeedButton.waitFor({ timeout: 5000, state: "visible" });
+  //       await globalFeedButton.click();
+  //     } catch {
+  //       // Если не нашли, используем альтернативный подход
+  //       await this.page.click("text=Global Feed");
+  //     }
+  //   });
+  // }
 
   async clickNewArticleButton() {
     return test.step("Переход к созданию новой заметки", async (step) => {
