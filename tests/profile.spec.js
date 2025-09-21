@@ -31,7 +31,7 @@ test.describe("Обновление профиля", () => {
     // 2. Нажать на пункт Профиль в имени пользователя
     await mainPage.clickUserDropdownProfile();
 
-    // 3. Нажать редактировать настройки профиля
+    // 3. Нажать редактировать настройки профиля пользователя
     await settingsPage.clickEditProfileSettingsButton();
 
     // 4. Проверить заголовок
