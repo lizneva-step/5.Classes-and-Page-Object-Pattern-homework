@@ -16,7 +16,7 @@ test.describe("Главная страница", () => {
     await page.goto(URL);
   });
 
-  test.only("Пользователю доступны табы Your Feed, Global Feed после регистрации", async ({
+  test("Пользователю доступны табы Your Feed, Global Feed после регистрации", async ({
     page,
   }) => {
     const user = {

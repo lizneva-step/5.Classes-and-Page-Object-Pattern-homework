@@ -25,9 +25,7 @@ test.describe("Действия со статьёй", () => {
     await page.goto(URL);
   });
 
-  test.only("Пользователь может оставить комментарий под статьёй", async ({
-    page,
-  }) => {
+  test("Пользователь может удалить статью", async ({ page }) => {
     const user = {
       name: faker.person.fullName(),
       email: faker.internet.email(),

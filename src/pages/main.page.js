@@ -37,6 +37,7 @@ export class MainPage {
 
   async gotoRegister() {
     return test.step("Переход на страницу регистрации", async (step) => {
+      await this.signupLink.waitFor({ state: "visible" });
       await this.signupLink.click();
     });
   }
